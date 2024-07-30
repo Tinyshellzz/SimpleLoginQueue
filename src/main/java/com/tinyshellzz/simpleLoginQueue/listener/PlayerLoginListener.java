@@ -1,6 +1,7 @@
 package com.tinyshellzz.simpleLoginQueue.listener;
 
 import com.tinyshellzz.simpleLoginQueue.ObjectPool;
+import com.tinyshellzz.simpleLoginQueue.config.PluginConfig;
 import com.tinyshellzz.simpleLoginQueue.service.QueueService;
 import com.tinyshellzz.simpleLoginQueue.utils.Pair;
 import net.md_5.bungee.api.ChatColor;
@@ -41,7 +42,7 @@ public class PlayerLoginListener implements Listener {
             if(QueueService.serverEmptyTime == null) {
                 QueueService.serverEmptyTime = new Date();
             } else {
-                // 超过30s没人登录, 就扩大waitLength
+                // 超过10s没人登录, 就扩大waitLength
                 QueueService.updateWaitLength();
             }
 
@@ -63,8 +64,11 @@ public class PlayerLoginListener implements Listener {
     }
 
     public void disallowMsg(PlayerLoginEvent event, int index) {
-        event.disallow(PlayerLoginEvent.Result.KICK_OTHER, String.format("你现在的位置是%d\n" +
-                "如果超过10分钟没有连接服务器, 你会被重新放到队列末尾\n" +
-                "如果你在队列的前端, 服务器有空位时超过10s没连接, 则会先放行其他玩家", index + 1));
+        StringBuilder msg = new StringBuilder(String.format("你现在的位置是%d\n", index + 1));
+        for(String str: PluginConfig.msg) {
+            msg.append(str).append("\n");
+        }
+
+        event.disallow(PlayerLoginEvent.Result.KICK_OTHER, msg.toString());
     }
 }

@@ -42,10 +42,22 @@ public class QueueService {
     }
 
     public static void updateWaitLength() {
-        // 超过30s没人登录, 就扩大waitLength
+        // 超过10s没人登录, 就扩大waitLength
         long diff = new Date().getTime() - serverEmptyTime.getTime();
-        if(diff / 1000 >= 30) {
-            waitLength = Math.min(queue.size(), waitLength<<1);
+        if(diff / 1000 >= 10) {
+            int nextLength = waitLength;
+            if(waitLength < 3) {
+                nextLength += 1;
+            } else if(waitLength < 10) {
+                nextLength += 2;
+            } else if(waitLength < 50) {
+                nextLength += 5;
+            } else {
+                nextLength += 10;
+            }
+            waitLength = Math.min(queue.size(), nextLength);
+
+            serverEmptyTime = new Date();   // 更新上次扩容时间
         }
     }
 
