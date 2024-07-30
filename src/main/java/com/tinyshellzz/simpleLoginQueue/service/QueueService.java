@@ -44,7 +44,7 @@ public class QueueService {
     public static void updateWaitLength() {
         // 超过30s没人登录, 就扩大waitLength
         long diff = new Date().getTime() - serverEmptyTime.getTime();
-        if(diff / 1000 >= 10) {
+        if(diff / 1000 >= 30) {
             waitLength = Math.min(queue.size(), waitLength<<1);
         }
     }

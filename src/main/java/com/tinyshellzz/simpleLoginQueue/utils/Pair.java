@@ -22,4 +22,7 @@ public class Pair<K, V> {
         return element1;
     }
 
+    public V setSecond(V v){
+element1 = v;
+}
 }
