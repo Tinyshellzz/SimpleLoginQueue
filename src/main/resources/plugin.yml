@@ -1,0 +1,19 @@
+name: SimpleLoginQueue
+version: '${version}'
+description: demo Project
+main: com.tinyshellzz.simpleLoginQueue.SimpleLoginQueue
+api-version: '1.20'
+load: POSTWORLD
+softdepend: [ PlaceholderAPI ]
+authors: [ Tinyshellzz ]
+folia-supported: true
+website: https://github.com/
+commands:
+  queue:
+    description: reload queue config
+    usage: /queue reload
+    permission: queue.use
+permissions:
+  perm.use:
+    default: false
+    description: Allows using /queue reload
