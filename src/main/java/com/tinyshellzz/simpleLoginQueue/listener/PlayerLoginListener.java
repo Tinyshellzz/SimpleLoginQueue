@@ -20,6 +20,9 @@ public class PlayerLoginListener implements Listener {
     @EventHandler
     public void handle(PlayerLoginEvent event) {
         Player player = event.getPlayer();
+        if(player.hasPermission("essentials.joinfullserver")) {    // 拥有特殊权限, 直接放行
+            return;
+        }
 
         int index = QueueService.getIndex(player.getUniqueId());
         // 玩家不在队列里, 将玩家放入队列
@@ -31,6 +34,7 @@ public class PlayerLoginListener implements Listener {
         int max = Bukkit.getServer().getMaxPlayers();
         int current = Bukkit.getOnlinePlayers().size();
         // 服务器有空位, 放行队列里的玩家
+
         if(current < max) {
             if(QueueService.serverEmptyTime == null) {
                 QueueService.serverEmptyTime = new Date();
