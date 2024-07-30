@@ -30,8 +30,8 @@ public class PlayerLoginListener implements Listener {
             queue.add(new Pair<>(player.getUniqueId(), new Date()));
             index = queue.size() - 1;
         } else {
-  queue.get(index).setSecond(new Date());
-}
+          queue.get(index).setSecond(new Date());
+        }
 
         int max = Bukkit.getServer().getMaxPlayers();
         int current = Bukkit.getOnlinePlayers().size();
