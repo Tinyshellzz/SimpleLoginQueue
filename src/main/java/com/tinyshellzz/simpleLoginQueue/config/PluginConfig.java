@@ -12,6 +12,8 @@ import static com.tinyshellzz.simpleLoginQueue.ObjectPool.plugin;
 public class PluginConfig {
     public static List<String> msg = new ArrayList<>();
 
+    public static int queue_time_out = 60;
+    public static int waite_time_out = 10;
     private static ConfigWrapper configWrapper = new ConfigWrapper(plugin, "config.yml");
     public static void reload() {
         configWrapper.reloadConfig();
@@ -23,6 +25,16 @@ public class PluginConfig {
             for (Object o : list) {
                 msg.add(o.toString());
             }
+        }
+
+        String config_queue_time_out = config.getString("queue_time_out");
+        if(config_queue_time_out != null) {
+            queue_time_out = Integer.parseInt(config_queue_time_out);
+        }
+
+        String config_waite_time_out = config.getString("wait_time_out");
+        if(config_waite_time_out != null) {
+            waite_time_out = Integer.parseInt(config_waite_time_out);
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.tinyshellzz.simpleLoginQueue.service;
 
+import com.tinyshellzz.simpleLoginQueue.config.PluginConfig;
 import com.tinyshellzz.simpleLoginQueue.utils.Pair;
 
 import java.util.Date;
@@ -25,8 +26,8 @@ public class QueueService {
         for (int i = 0; i < size; ) {
             Pair<UUID, Date> p = queue.get(i);
             long diff = new Date().getTime() - p.getSecond().getTime();
-            // 超过5分钟没连，就将玩家移出队列
-            if(diff / (60 * 1000) >= 5) {
+            // 超过1分钟没连，就将玩家移出队列
+            if(diff / 1000 >= PluginConfig.queue_time_out) {
                 queue.remove(i);
                 size--;
                 continue;
@@ -44,7 +45,7 @@ public class QueueService {
     public static void updateWaitLength() {
         // 超过10s没人登录, 就扩大waitLength
         long diff = new Date().getTime() - serverEmptyTime.getTime();
-        if(diff / 1000 >= 10) {
+        if(diff / 1000 >= PluginConfig.waite_time_out) {
             int nextLength = waitLength;
             if(waitLength < 6) {
                 nextLength += 2;

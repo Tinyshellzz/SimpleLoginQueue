@@ -64,8 +64,9 @@ public class PlayerLoginListener implements Listener {
     }
 
     public void disallowMsg(PlayerLoginEvent event, int index) {
-        StringBuilder msg = new StringBuilder(String.format("你现在的位置是%d\n", index + 1));
+        StringBuilder msg = new StringBuilder();
         for(String str: PluginConfig.msg) {
+            str = str.replaceAll("\\{index\\}", index + 1 + "");
             msg.append(str).append("\n");
         }
 
