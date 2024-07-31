@@ -19,7 +19,7 @@ import static com.tinyshellzz.simpleLoginQueue.ObjectPool.queue;
 
 public class PlayerLoginListener implements Listener {
     @EventHandler
-    public void handle(PlayerLoginEvent event) {
+    public synchronized void handle(PlayerLoginEvent event) {
         Player player = event.getPlayer();
         if(player.hasPermission("essentials.joinfullserver")) {    // 拥有特殊权限, 直接放行
             return;
@@ -33,6 +33,8 @@ public class PlayerLoginListener implements Listener {
         } else {
           queue.get(index).setSecond(new Date());
         }
+
+
 
         int max = Bukkit.getServer().getMaxPlayers();
         int current = Bukkit.getOnlinePlayers().size();
@@ -54,15 +56,7 @@ public class PlayerLoginListener implements Listener {
                 queue.remove(index);
                 QueueService.serverEmptyTime = null;
                 QueueService.waitLength = 1;
-
-                // 等一会儿
-                try {
-                    Thread.sleep(200);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
             }
-
         } else {    // 服务器没有空位
             QueueService.serverEmptyTime = null;
             QueueService.waitLength = 1;
