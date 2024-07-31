@@ -38,7 +38,7 @@ public class PlayerLoginListener implements Listener {
         int current = Bukkit.getOnlinePlayers().size();
         // 服务器有空位, 放行队列里的玩家
 
-        if(current < max) {
+        if(current < max - 1) {
             if(QueueService.serverEmptyTime == null) {
                 QueueService.serverEmptyTime = new Date();
             } else {
@@ -54,6 +54,13 @@ public class PlayerLoginListener implements Listener {
                 queue.remove(index);
                 QueueService.serverEmptyTime = null;
                 QueueService.waitLength = 1;
+
+                // 等一会儿
+                try {
+                    Thread.sleep(200);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
             }
 
         } else {    // 服务器没有空位
