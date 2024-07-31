@@ -16,6 +16,7 @@ public class PluginConfig {
     public static void reload() {
         configWrapper.reloadConfig();
 
+        msg.clear();
         YamlConfiguration config = configWrapper.getConfig();
         List list = (List)config.get("msg");
         if(list != null) {
