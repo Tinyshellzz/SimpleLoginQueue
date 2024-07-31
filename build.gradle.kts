@@ -18,7 +18,7 @@ repositories {
     maven("https://repo.rosewooddev.io/repository/public/")
     maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
     maven("https://repo.maven.apache.org/maven2/")
-    maven("https://mvn.lumine.io/repository/maven-public/")
+//    maven("https://mvn.lumine.io/repository/maven-public/")
     maven("https://r.irepo.space/maven/")
     maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://nexus.phoenixdevt.fr/repository/maven-public/")
