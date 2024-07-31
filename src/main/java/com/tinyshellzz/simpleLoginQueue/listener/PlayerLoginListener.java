@@ -19,48 +19,49 @@ import static com.tinyshellzz.simpleLoginQueue.ObjectPool.queue;
 
 public class PlayerLoginListener implements Listener {
     @EventHandler
-    public synchronized void handle(PlayerLoginEvent event) {
-        Player player = event.getPlayer();
-        if(player.hasPermission("essentials.joinfullserver")) {    // 拥有特殊权限, 直接放行
-            return;
-        }
-
-        int index = QueueService.getIndex(player.getUniqueId());
-        // 玩家不在队列里, 将玩家放入队列
-        if(index == -1) {
-            queue.add(new Pair<>(player.getUniqueId(), new Date()));
-            index = queue.size() - 1;
-        } else {
-          queue.get(index).setSecond(new Date());
-        }
-
-
-
-        int max = Bukkit.getServer().getMaxPlayers();
-        int current = Bukkit.getOnlinePlayers().size();
-        // 服务器有空位, 放行队列里的玩家
-
-        if(current < max) {
-            if(QueueService.serverEmptyTime == null) {
-                QueueService.serverEmptyTime = new Date();
-            } else {
-                // 超过10s没人登录, 就扩大waitLength
-                QueueService.updateWaitLength();
+    public void handle(PlayerLoginEvent event) {
+        synchronized (PlayerLoginListener.class) {
+            Player player = event.getPlayer();
+            if (player.hasPermission("essentials.joinfullserver")) {    // 拥有特殊权限, 直接放行
+                return;
             }
 
-            boolean isInWaitList = QueueService.isInWaitList(index);
-            if(isInWaitList == false) { // 玩家不在 isInWaitList 里
-                disallowMsg(event, index);
-            } else {    // 玩家在 isInWaitList 里. 放行玩家
-                Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "SimpleLoginQueue - 放行玩家: " + player.getDisplayName());
-                queue.remove(index);
+            int index = QueueService.getIndex(player.getUniqueId());
+            // 玩家不在队列里, 将玩家放入队列
+            if (index == -1) {
+                queue.add(new Pair<>(player.getUniqueId(), new Date()));
+                index = queue.size() - 1;
+            } else {
+                queue.get(index).setSecond(new Date());
+            }
+
+
+            int max = Bukkit.getServer().getMaxPlayers();
+            int current = Bukkit.getOnlinePlayers().size();
+            // 服务器有空位, 放行队列里的玩家
+
+            if (current < max) {
+                if (QueueService.serverEmptyTime == null) {
+                    QueueService.serverEmptyTime = new Date();
+                } else {
+                    // 超过10s没人登录, 就扩大waitLength
+                    QueueService.updateWaitLength();
+                }
+
+                boolean isInWaitList = QueueService.isInWaitList(index);
+                if (isInWaitList == false) { // 玩家不在 isInWaitList 里
+                    disallowMsg(event, index);
+                } else {    // 玩家在 isInWaitList 里. 放行玩家
+                    Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "SimpleLoginQueue - 放行玩家: " + player.getDisplayName());
+                    queue.remove(index);
+                    QueueService.serverEmptyTime = null;
+                    QueueService.waitLength = 1;
+                }
+            } else {    // 服务器没有空位
                 QueueService.serverEmptyTime = null;
                 QueueService.waitLength = 1;
+                disallowMsg(event, index);
             }
-        } else {    // 服务器没有空位
-            QueueService.serverEmptyTime = null;
-            QueueService.waitLength = 1;
-            disallowMsg(event, index);
         }
     }
 
