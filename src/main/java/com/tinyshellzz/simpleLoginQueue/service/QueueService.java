@@ -25,8 +25,8 @@ public class QueueService {
         for (int i = 0; i < size; ) {
             Pair<UUID, Date> p = queue.get(i);
             long diff = new Date().getTime() - p.getSecond().getTime();
-            // 超过10分钟没连，就将玩家移出队列
-            if(diff / (60 * 1000) >= 10) {
+            // 超过5分钟没连，就将玩家移出队列
+            if(diff / (60 * 1000) >= 5) {
                 queue.remove(i);
                 size--;
                 continue;
@@ -46,14 +46,10 @@ public class QueueService {
         long diff = new Date().getTime() - serverEmptyTime.getTime();
         if(diff / 1000 >= 10) {
             int nextLength = waitLength;
-            if(waitLength < 3) {
-                nextLength += 1;
-            } else if(waitLength < 10) {
+            if(waitLength < 6) {
                 nextLength += 2;
-            } else if(waitLength < 50) {
-                nextLength += 5;
             } else {
-                nextLength += 10;
+                nextLength *= 2;
             }
             waitLength = Math.min(queue.size(), nextLength);
 
