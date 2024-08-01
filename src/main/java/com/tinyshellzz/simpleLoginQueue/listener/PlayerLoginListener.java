@@ -56,6 +56,13 @@ public class PlayerLoginListener implements Listener {
                     queue.remove(index);
                     QueueService.serverEmptyTime = null;
                     QueueService.waitLength = 1;
+
+                    // 等一小会儿
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             } else {    // 服务器没有空位
                 QueueService.serverEmptyTime = null;
