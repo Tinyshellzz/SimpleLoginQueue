@@ -24,6 +24,4 @@ public class ObjectPool {
     public final static Yaml yaml = new Yaml();
 
     public static ArrayList<Pair<UUID, Date>> queue = new ArrayList<>();
-
-    public static int current_player_num = 0;
 }

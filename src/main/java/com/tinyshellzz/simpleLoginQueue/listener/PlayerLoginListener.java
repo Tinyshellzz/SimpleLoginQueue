@@ -23,6 +23,12 @@ public class PlayerLoginListener implements Listener {
         synchronized (PlayerLoginListener.class) {
             Player player = event.getPlayer();
             if (player.hasPermission("essentials.joinfullserver")) {    // 拥有特殊权限, 直接放行
+                // 等一小会儿
+                try {
+                    Thread.sleep(PluginConfig.interval_time);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
                 return;
             }
 
@@ -37,9 +43,10 @@ public class PlayerLoginListener implements Listener {
 
 
             int max = Bukkit.getServer().getMaxPlayers();
+            int current = Bukkit.getOnlinePlayers().size();
             // 服务器有空位, 放行队列里的玩家
 
-            if (ObjectPool.current_player_num < max) {
+            if (current < max) {
                 if (QueueService.serverEmptyTime == null) {
                     QueueService.serverEmptyTime = new Date();
                 } else {
