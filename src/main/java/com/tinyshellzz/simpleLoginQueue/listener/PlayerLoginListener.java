@@ -21,14 +21,15 @@ public class PlayerLoginListener implements Listener {
     @EventHandler
     public void handle(PlayerLoginEvent event) {
         synchronized (PlayerLoginListener.class) {
+            // 等一小会儿, 等上一个玩家完成登录
+            try {
+                Thread.sleep(PluginConfig.interval_time);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
             Player player = event.getPlayer();
             if (player.hasPermission("essentials.joinfullserver")) {    // 拥有特殊权限, 直接放行
-                // 等一小会儿
-                try {
-                    Thread.sleep(PluginConfig.interval_time);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
                 return;
             }
 
@@ -63,12 +64,6 @@ public class PlayerLoginListener implements Listener {
                     QueueService.serverEmptyTime = null;
                     QueueService.waitLength = 1;
 
-                    // 等一小会儿
-                    try {
-                        Thread.sleep(PluginConfig.interval_time);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
                 }
             } else {    // 服务器没有空位
                 QueueService.serverEmptyTime = null;
