@@ -59,7 +59,7 @@ public class PlayerLoginListener implements Listener {
 
                     // 等一小会儿
                     try {
-                        Thread.sleep(500);
+                        Thread.sleep(PluginConfig.interval_time);
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }

@@ -14,6 +14,7 @@ public class PluginConfig {
 
     public static int queue_time_out = 60;
     public static int waite_time_out = 10;
+    public static int interval_time = 500;
     private static ConfigWrapper configWrapper = new ConfigWrapper(plugin, "config.yml");
     public static void reload() {
         configWrapper.reloadConfig();
@@ -35,6 +36,11 @@ public class PluginConfig {
         String config_waite_time_out = config.getString("wait_time_out");
         if(config_waite_time_out != null) {
             waite_time_out = Integer.parseInt(config_waite_time_out);
+        }
+
+        String config_interval_time = config.getString("interval_time");
+        if(config_interval_time != null) {
+            interval_time = Integer.parseInt(config_interval_time);
         }
     }
 }
