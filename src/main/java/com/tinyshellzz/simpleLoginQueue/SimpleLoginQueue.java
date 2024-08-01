@@ -2,7 +2,9 @@ package com.tinyshellzz.simpleLoginQueue;
 
 import com.tinyshellzz.simpleLoginQueue.command.QueueCommand;
 import com.tinyshellzz.simpleLoginQueue.config.PluginConfig;
+import com.tinyshellzz.simpleLoginQueue.listener.PlayerJoinListener;
 import com.tinyshellzz.simpleLoginQueue.listener.PlayerLoginListener;
+import com.tinyshellzz.simpleLoginQueue.listener.PlayerQuitListener;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -31,6 +33,8 @@ public final class SimpleLoginQueue extends JavaPlugin {
 
     public void register() {
         this.getServer().getPluginManager().registerEvents(new PlayerLoginListener(), this);
+        this.getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
+        this.getServer().getPluginManager().registerEvents(new PlayerQuitListener(), this);
 
         this.getCommand("queue").setExecutor(new QueueCommand());
     }

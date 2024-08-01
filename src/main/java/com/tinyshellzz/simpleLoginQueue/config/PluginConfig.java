@@ -14,7 +14,7 @@ public class PluginConfig {
 
     public static int queue_time_out = 60;
     public static int waite_time_out = 10;
-    public static int interval_time = 100;
+    public static int interval_time = 200;
     private static ConfigWrapper configWrapper = new ConfigWrapper(plugin, "config.yml");
     public static void reload() {
         configWrapper.reloadConfig();
