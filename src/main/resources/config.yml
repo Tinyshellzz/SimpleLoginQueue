@@ -10,4 +10,4 @@ queue_time_out: 60
 # 服务器有空位时, 超过该时间未连接, 放行后面的玩家
 wait_time_out: 10
 # 两个玩家进入的时间间隔，单位ms(可能与玩家放行后 服务器已满有关)
-interval_time: 500
+interval_time: 200
