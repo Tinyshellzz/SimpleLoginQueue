@@ -25,6 +25,7 @@ public final class SimpleLoginQueue extends JavaPlugin {
 
     public void init(){
         ObjectPool.plugin = this;
+        ObjectPool.current_player_num = Bukkit.getOnlinePlayers().size();
         PluginConfig.reload();
     }
 

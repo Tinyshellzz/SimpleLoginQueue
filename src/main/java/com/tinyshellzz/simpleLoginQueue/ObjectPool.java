@@ -25,4 +25,5 @@ public class ObjectPool {
 
     public static ArrayList<Pair<UUID, Date>> queue = new ArrayList<>();
 
+    public static int current_player_num = 0;
 }
