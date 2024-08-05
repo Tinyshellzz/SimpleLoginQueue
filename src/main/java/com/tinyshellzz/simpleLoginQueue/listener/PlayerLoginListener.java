@@ -21,54 +21,58 @@ public class PlayerLoginListener implements Listener {
     @EventHandler
     public void handle(PlayerLoginEvent event) {
         synchronized (PlayerLoginListener.class) {
-            // 等一小会儿, 等上一个玩家完成登录
-            try {
-                Thread.sleep(PluginConfig.interval_time);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-
             Player player = event.getPlayer();
-            if (player.hasPermission("essentials.joinfullserver")) {    // 拥有特殊权限, 直接放行
-                return;
-            }
-
-            int index = QueueService.getIndex(player.getUniqueId());
-            // 玩家不在队列里, 将玩家放入队列
-            if (index == -1) {
-                queue.add(new Pair<>(player.getUniqueId(), new Date()));
-                index = queue.size() - 1;
-            } else {
-                queue.get(index).setSecond(new Date());
-            }
-
-
-            int max = Bukkit.getServer().getMaxPlayers();
-            int current = Bukkit.getOnlinePlayers().size();
-            // 服务器有空位, 放行队列里的玩家
-
-            if (current < max) {
-                if (QueueService.serverEmptyTime == null) {
-                    QueueService.serverEmptyTime = new Date();
+            if (!player.hasPermission("essentials.joinfullserver")) {    // 拥有特殊权限, 直接放行
+                int index = QueueService.getIndex(player.getUniqueId());
+                // 玩家不在队列里, 将玩家放入队列
+                if (index == -1) {
+                    queue.add(new Pair<>(player.getUniqueId(), new Date()));
+                    index = queue.size() - 1;
                 } else {
-                    // 超过10s没人登录, 就扩大waitLength
-                    QueueService.updateWaitLength();
+                    queue.get(index).setSecond(new Date());
                 }
 
-                boolean isInWaitList = QueueService.isInWaitList(index);
-                if (isInWaitList == false) { // 玩家不在 isInWaitList 里
-                    disallowMsg(event, index);
-                } else {    // 玩家在 isInWaitList 里. 放行玩家
-                    Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "SimpleLoginQueue - 放行玩家: " + player.getDisplayName());
-                    queue.remove(index);
+                // 等一小会儿, 等上一个玩家完成登录
+                try {
+                    Thread.sleep(PluginConfig.interval_time / 2);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+
+                int max = Bukkit.getServer().getMaxPlayers();
+                int current = Bukkit.getOnlinePlayers().size();
+                // 服务器有空位, 放行队列里的玩家
+
+                if (current < max) {
+                    // 等一小会儿, 等上一个玩家完成退出
+                    try {
+                        Thread.sleep(PluginConfig.interval_time / 2);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                    if (QueueService.serverEmptyTime == null) {
+                        QueueService.serverEmptyTime = new Date();
+                    } else {
+                        // 超过10s没人登录, 就扩大waitLength
+                        QueueService.updateWaitLength();
+                    }
+
+                    boolean isInWaitList = QueueService.isInWaitList(index);
+                    if (isInWaitList == false) { // 玩家不在 isInWaitList 里
+                        disallowMsg(event, index);
+                    } else {    // 玩家在 isInWaitList 里. 放行玩家
+                        Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "SimpleLoginQueue - 放行玩家: " + player.getDisplayName());
+                        queue.remove(index);
+                        QueueService.serverEmptyTime = null;
+                        QueueService.waitLength = 1;
+
+                    }
+                } else {    // 服务器没有空位
                     QueueService.serverEmptyTime = null;
                     QueueService.waitLength = 1;
-
+                    disallowMsg(event, index);
                 }
-            } else {    // 服务器没有空位
-                QueueService.serverEmptyTime = null;
-                QueueService.waitLength = 1;
-                disallowMsg(event, index);
             }
         }
     }
