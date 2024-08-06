@@ -21,6 +21,13 @@ public class PlayerLoginListener implements Listener {
     @EventHandler
     public void handle(PlayerLoginEvent event) {
         synchronized (PlayerLoginListener.class) {
+            // 等一小会儿, 等上一个玩家完成登录
+            try {
+                Thread.sleep(PluginConfig.interval_time / 2);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
             Player player = event.getPlayer();
             if (!player.hasPermission("essentials.joinfullserver")) {    // 拥有特殊权限, 直接放行
                 int index = QueueService.getIndex(player.getUniqueId());
@@ -32,18 +39,11 @@ public class PlayerLoginListener implements Listener {
                     queue.get(index).setSecond(new Date());
                 }
 
-                // 等一小会儿, 等上一个玩家完成登录
-                try {
-                    Thread.sleep(PluginConfig.interval_time / 2);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-
                 int max = Bukkit.getServer().getMaxPlayers();
                 int current = Bukkit.getOnlinePlayers().size();
                 // 服务器有空位, 放行队列里的玩家
 
-                if (current < max) {
+                if (current < max - 1) {
                     // 等一小会儿, 等上一个玩家完成退出
                     try {
                         Thread.sleep(PluginConfig.interval_time / 2);
@@ -62,7 +62,7 @@ public class PlayerLoginListener implements Listener {
                     if (isInWaitList == false) { // 玩家不在 isInWaitList 里
                         disallowMsg(event, index);
                     } else {    // 玩家在 isInWaitList 里. 放行玩家
-                        Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "SimpleLoginQueue - 放行玩家: " + player.getDisplayName());
+                        Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + String.format("SimpleLoginQueue [%d,%d] - 放行玩家: ", current, max) + player.getName());
                         queue.remove(index);
                         QueueService.serverEmptyTime = null;
                         QueueService.waitLength = 1;
