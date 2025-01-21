@@ -39,11 +39,16 @@ public class PlayerLoginListener implements Listener {
                     queue.get(index).setSecond(new Date());
                 }
 
-                int max = Bukkit.getServer().getMaxPlayers();
+                int max = -1;
+                if(PluginConfig.max_players <= 0) {
+                    max = Bukkit.getServer().getMaxPlayers();
+                } else {
+                    max = PluginConfig.max_players;
+                }
                 int current = Bukkit.getOnlinePlayers().size();
                 // 服务器有空位, 放行队列里的玩家
 
-                if (current < max - 1) {
+                if (current < max) {
                     // 等一小会儿, 等上一个玩家完成退出
                     try {
                         Thread.sleep(PluginConfig.interval_time / 2);

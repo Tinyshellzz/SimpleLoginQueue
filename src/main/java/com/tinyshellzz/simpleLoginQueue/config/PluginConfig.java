@@ -15,6 +15,7 @@ public class PluginConfig {
     public static int queue_time_out = 60;
     public static int waite_time_out = 10;
     public static int interval_time = 200;
+    public static int max_players = -1;
     private static ConfigWrapper configWrapper = new ConfigWrapper(plugin, "config.yml");
     public static void reload() {
         configWrapper.reloadConfig();
@@ -41,6 +42,11 @@ public class PluginConfig {
         String config_interval_time = config.getString("interval_time");
         if(config_interval_time != null) {
             interval_time = Integer.parseInt(config_interval_time);
+        }
+
+        String config_max_players = config.getString("max_players");
+        if(config_max_players != null) {
+            max_players = Integer.parseInt(config_max_players);
         }
     }
 }
